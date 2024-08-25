@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="text-align:center; margin-bottom: 30px;">Register or Login</h1>
+
+    <div class="tab-container">
+        <div class="tabs">
+            <button class="tab-link active" onclick="openTab(event, 'register-section')">Register</button>
+            <button class="tab-link" onclick="openTab(event, 'login-section')">Login</button>
+        </div>
+
+        <div id="register-section" class="tab-content active">
+            <h2>Register</h2>
+            <form method="POST">
+                <input type="text" name="full_name" placeholder="Full Name" required>
+                <button type="submit" name="register">Register</button>
+            </form>
+        </div>
+
+        <div id="login-section" class="tab-content">
+            <h2>Login</h2>
+            <form method="POST">
+                <input type="text" name="auth_key" placeholder="Your Login Key" required>
+                <button type="submit" name="login">Login</button>
+            </form>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+
+    <script>
+        function openTab(evt, tabId) {
+            // Hide all tab content
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove the 'active' class from all tabs
+            const tabLinks = document.querySelectorAll('.tab-link');
+            tabLinks.forEach(link => link.classList.remove('active'));
+
+            // Show the selected tab and add 'active' class to the clicked tab
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Initialize the first tab as active
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.tab-link.active').click();
+        });
+    </script>
+{% endblock %}

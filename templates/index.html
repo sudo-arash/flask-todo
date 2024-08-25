@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="text-align: center;">Your Todo List</h1>
+
+    <form id="add-todo-form" method="POST" action="/add" hx-post="/add" hx-swap="beforeend" hx-target="#todo-list">
+        <input type="text" name="title" placeholder="New Todo" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <ul id="todo-list">
+        <!-- The todo items will be populated here -->
+    </ul>
+
+    <script>
+        document.addEventListener('htmx:load', function() {
+            // Fetch the todos as JSON
+            fetch('/api/todos')
+                .then(response => response.json())
+                .then(todos => {
+                    const todoList = document.getElementById('todo-list');
+                    todoList.innerHTML = ''; // Clear any existing content
+                    todos.forEach(todo => {
+                        fetch(`/item/${todo.id}`)
+                            .then(response => response.text())
+                            .then(html => {
+                                todoList.insertAdjacentHTML('beforeend', html);
+                                htmx.process(todoList.lastElementChild); // Activate HTMX on the new element
+                            });
+                    });
+                });
+        });
+    </script>
+    
+{% endblock %}
